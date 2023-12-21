@@ -17,12 +17,14 @@ const columns = [
   {
     name: "data_nascimento",
     label: "Data de nascimento",
+    align: "left",
     field: "data_nascimento",
     sortable: true,
   },
   {
     name: "num_bilhete",
     label: "Nº do documento",
+    align: "left",
     field: "num_bilhete",
     sortable: true,
   },
@@ -30,6 +32,7 @@ const columns = [
     name: "status",
     label: "Status do membro",
     field: "status",
+    align: "left",
     sortable: true,
   },
   {

@@ -47,7 +47,11 @@
       </template>
     </q-table>
 
-    <form-modal :show="mostrarModal" />
+    <form-modal
+      :show="mostrarModal"
+      @closeModal="closeModal"
+      @addMembros="addMembros"
+    />
   </div>
 </template>
 
@@ -56,6 +60,7 @@ import formModal from "src/components/forms/FormAddEdit.vue";
 import { columns } from "src/pages/auth/admin/membros/table.js";
 import { useQuasar } from "quasar";
 import userApi from "src/composible/userApi.js";
+import usenotification from "src/composible/useNotify";
 import { ref, onMounted } from "vue";
 
 export default {
@@ -63,7 +68,8 @@ export default {
   setup() {
     const tabela = "membros";
     const membros = ref([]);
-    const { list } = userApi();
+    const { list, post } = userApi();
+    const { notifyError, notifySuccess } = usenotification();
     const $q = useQuasar();
     const mostrarModal = ref(false);
     const loading = ref(false);
@@ -74,7 +80,24 @@ export default {
       mostrarModal.value = true;
     };
 
-    onMounted(async () => {
+    const closeModal = () => {
+      mostrarModal.value = false;
+    };
+
+    const addMembros = async (form) => {
+      try {
+        $q.loading.show({ message: "Salvando..." });
+        await post(tabela, form);
+        notifySuccess("Dados salvos com sucesso");
+      } catch (error) {
+        notifyError("Não foi possível realizar o cadastro");
+      } finally {
+        $q.loading.hide();
+        carregarMembros();
+      }
+    };
+
+    const carregarMembros = async () => {
       try {
         $q.loading.show({ message: "Carregando informações" });
         membros.value = await list(tabela);
@@ -82,13 +105,19 @@ export default {
       } finally {
         $q.loading.hide();
       }
+    };
+
+    onMounted(() => {
+      carregarMembros();
     });
 
     return {
       showForm,
       columns,
       membros,
+      addMembros,
       mostrarModal,
+      closeModal,
       loading,
       filter,
       rowCount,
