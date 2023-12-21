@@ -45,6 +45,18 @@
           </template>
         </q-input>
       </template>
+      <template v-slot:body-cell-options="props">
+        <q-td :props="props">
+          <q-btn dense flat icon="mdi-file-edit" color="secondary" />
+          <q-btn
+            dense
+            flat
+            icon="mdi-delete-forever-outline"
+            color="negative"
+          />
+          <q-btn dense flat icon="mdi-eye-outline" color="blue-grey-8" />
+        </q-td>
+      </template>
     </q-table>
 
     <form-modal

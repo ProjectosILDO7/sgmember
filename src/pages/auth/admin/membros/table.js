@@ -37,8 +37,9 @@ const columns = [
   },
   {
     name: "options",
+    align: "left",
     label: "Opções",
-    field: "optins",
+    field: "options",
   },
 ];
 
