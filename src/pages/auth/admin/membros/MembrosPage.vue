@@ -105,6 +105,7 @@ export default {
         notifyError("Não foi possível realizar o cadastro");
       } finally {
         $q.loading.hide();
+        closeModal();
         carregarMembros();
       }
     };
