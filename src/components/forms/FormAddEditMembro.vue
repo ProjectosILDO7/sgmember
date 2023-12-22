@@ -205,7 +205,6 @@ export default {
       num_bilhete: "",
       data_nascimento: "",
       status: "",
-      idade: 0,
     });
 
     const isUpdate = computed(() => {
@@ -213,19 +212,26 @@ export default {
     });
 
     onMounted(async () => {
-      if (isUpdate.value) {
-        form.value = await getById(tabela, isUpdate.value);
+      try {
+        $q.loading.show({ message: "Carregando informações" });
+        if (isUpdate.value) {
+          form.value = await getById(tabela, isUpdate.value);
+        }
+      } catch (error) {
+      } finally {
+        $q.loading.hide();
       }
     });
 
     const submit = async () => {
       try {
-        $q.loading.show({ message: "Cadastrando" });
         if (isUpdate.value) {
+          $q.loading.show({ message: "Alterando informações..." });
           await update(tabela, form.value);
           notifySuccess("Dados do membro actualizado com sucesso...");
           router.push({ name: "membros" });
         } else {
+          $q.loading.show({ message: "Cadastrando..." });
           await post(tabela, form.value);
           notifySuccess("Membro inserido com sucesso");
           router.push({ name: "membros" });

@@ -24,12 +24,13 @@
           glasses
           outline
           dense
-          icon="mdi-download"
+          icon="mdi-file-excel"
           v-if="membros.length !== 0"
           class="q-ml-sm"
-          color="primary"
+          color="green-10"
           :disable="loading"
-          label="Baixar lista de membros"
+          label="Exportar lista de membros"
+          @click="exportData"
         />
         <q-space />
         <q-input
@@ -60,28 +61,46 @@
             flat
             icon="mdi-delete-forever-outline"
             color="negative"
+            @click="apagarMembro(props.row)"
           />
-          <q-btn dense flat icon="mdi-eye-outline" color="blue-grey-8" />
+          <q-btn
+            dense
+            flat
+            icon="mdi-eye-outline"
+            color="blue-grey-8"
+            @click="detalhesInfo(props.row)"
+          />
         </q-td>
       </template>
     </q-table>
+
+    <detalhes-membro
+      :dados="dados"
+      :show="showDialoge"
+      @modalClose="modalClose"
+    />
   </div>
 </template>
 
 <script>
 import { columns } from "src/pages/auth/admin/membros/table.js";
-import { useQuasar } from "quasar";
+import detalhesMembro from "src/components/detalhes/detalhesDialog.vue";
+import { useQuasar, exportFile } from "quasar";
+import { exportToExcel } from "src/pages/auth/admin/membros/exportUtil/exportToExcel.js";
 import userApi from "src/composible/userApi.js";
 import usenotification from "src/composible/useNotify";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
-  components: {},
+  components: { detalhesMembro },
   setup() {
     const tabela = "membros";
     const membros = ref([]);
-    const { list } = userApi();
+    const dados = ref({});
+    const excel = exportFile();
+    const showDialoge = ref(false);
+    const { list, remove } = userApi();
     const $q = useQuasar();
     const loading = ref(false);
     const filter = ref("");
@@ -90,6 +109,10 @@ export default {
 
     const editForm = (id) => {
       router.push({ name: "form-cadastro", params: { id: id } });
+    };
+
+    const modalClose = () => {
+      showDialoge.value = false;
     };
 
     const carregarMembros = async () => {
@@ -102,17 +125,51 @@ export default {
       }
     };
 
+    const detalhesInfo = (data) => {
+      (dados.value = data), (showDialoge.value = true);
+    };
+
+    const apagarMembro = async (item) => {
+      try {
+        $q.dialog({
+          title: "Confirmação",
+          message: `tens a certeza que pretendes eliminar o (a) ${item.nome} da base de dados da Igreja ?`,
+          cancel: true,
+          persistent: true,
+        }).onOk(async () => {
+          $q.loading.show({ message: "Apagando dados do membro..." });
+          await remove(tabela, item.id);
+          carregarMembros();
+          notifySuccess("Membro apagado com sucesso");
+        });
+      } catch (error) {
+        notifyError(error.message);
+      } finally {
+        $q.loading.hide();
+      }
+    };
+
+    const exportData = () => {
+      exportToExcel(membros.value);
+    };
     onMounted(() => {
       carregarMembros();
     });
 
     return {
       columns,
+      exportData,
       membros,
       loading,
       editForm,
       filter,
       rowCount,
+      apagarMembro,
+      showDialoge,
+      detalhesInfo,
+      dados,
+      modalClose,
+      excel,
     };
   },
 };
