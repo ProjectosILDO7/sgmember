@@ -1,0 +1,1 @@
+import{Q as r}from"./QPage.cc639ba5.js";import{Q as t,a as o}from"./QLayout.db06ca5a.js";import{_ as c,Z as s,$ as n,a0 as a,f as e,a2 as f}from"./index.b55bc580.js";const _={};function d(i,l){return s(),n(t,null,{default:a(()=>[e(o,null,{default:a(()=>[e(r,{padding:""},{default:a(()=>[f(" Secretaria ")]),_:1})]),_:1})]),_:1})}var x=c(_,[["render",d]]);export{x as default};

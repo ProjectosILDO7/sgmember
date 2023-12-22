@@ -1,1 +1,0 @@
-import{Q as t}from"./QPage.c09a985a.js";import{Q as r,a as n}from"./QLayout.04003d87.js";import{ag as o,ah as s,ai as c,aj as a,f as e,al as f}from"./index.d25a7423.js";const i={};function l(_,d){return s(),c(r,null,{default:a(()=>[e(n,null,{default:a(()=>[e(t,{padding:""},{default:a(()=>[f(" Finan\xE7as ")]),_:1})]),_:1})]),_:1})}var g=o(i,[["render",l]]);export{g as default};
