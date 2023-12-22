@@ -7,7 +7,7 @@
             v-if="isUpdate"
             flat
             icon="mdi-file-edit"
-            label=" Alterar dados do membros"
+            label=" Alterar dados do membro"
           />
           <q-btn
             v-else
