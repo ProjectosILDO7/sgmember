@@ -24,6 +24,11 @@ const routes = [
         component: () =>
           import("pages/auth/admin/secretaria/SecretariaPage.vue"),
       },
+      {
+        path: "/formAddEditMembro/:id?",
+        name: "form-cadastro",
+        component: () => import("src/components/forms/FormAddEditMembro.vue"),
+      },
     ],
     meta: { requiresAuth: true },
   },

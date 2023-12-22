@@ -13,14 +13,16 @@
       <template v-slot:top>
         <q-btn
           dense
+          outline
           icon="mdi-database"
           color="primary"
           :disable="loading"
           label="Cadastrar novo membro"
-          @click="showForm"
+          :to="{ name: 'form-cadastro' }"
         />
         <q-btn
           glasses
+          outline
           dense
           icon="mdi-download"
           v-if="membros.length !== 0"
@@ -28,7 +30,6 @@
           color="primary"
           :disable="loading"
           label="Baixar lista de membros"
-          @click="removeRow"
         />
         <q-space />
         <q-input
@@ -47,7 +48,13 @@
       </template>
       <template v-slot:body-cell-options="props">
         <q-td :props="props">
-          <q-btn dense flat icon="mdi-file-edit" color="secondary" />
+          <q-btn
+            dense
+            flat
+            icon="mdi-file-edit"
+            color="secondary"
+            @click="editForm(props.row.id)"
+          />
           <q-btn
             dense
             flat
@@ -58,56 +65,31 @@
         </q-td>
       </template>
     </q-table>
-
-    <form-modal
-      :show="mostrarModal"
-      @closeModal="closeModal"
-      @addMembros="addMembros"
-    />
   </div>
 </template>
 
 <script>
-import formModal from "src/components/forms/FormAddEdit.vue";
 import { columns } from "src/pages/auth/admin/membros/table.js";
 import { useQuasar } from "quasar";
 import userApi from "src/composible/userApi.js";
 import usenotification from "src/composible/useNotify";
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
-  components: { formModal },
+  components: {},
   setup() {
     const tabela = "membros";
     const membros = ref([]);
-    const { list, post } = userApi();
-    const { notifyError, notifySuccess } = usenotification();
+    const { list } = userApi();
     const $q = useQuasar();
-    const mostrarModal = ref(false);
     const loading = ref(false);
     const filter = ref("");
-    const rowCount = ref(10);
+    const rowCount = ref(5);
+    const router = useRouter();
 
-    const showForm = () => {
-      mostrarModal.value = true;
-    };
-
-    const closeModal = () => {
-      mostrarModal.value = false;
-    };
-
-    const addMembros = async (form) => {
-      try {
-        $q.loading.show({ message: "Salvando..." });
-        await post(tabela, form);
-        notifySuccess("Dados salvos com sucesso");
-      } catch (error) {
-        notifyError("Não foi possível realizar o cadastro");
-      } finally {
-        $q.loading.hide();
-        closeModal();
-        carregarMembros();
-      }
+    const editForm = (id) => {
+      router.push({ name: "form-cadastro", params: { id: id } });
     };
 
     const carregarMembros = async () => {
@@ -125,13 +107,10 @@ export default {
     });
 
     return {
-      showForm,
       columns,
       membros,
-      addMembros,
-      mostrarModal,
-      closeModal,
       loading,
+      editForm,
       filter,
       rowCount,
     };
