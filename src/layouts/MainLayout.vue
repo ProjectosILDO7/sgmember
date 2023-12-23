@@ -72,6 +72,12 @@ import { useQuasar } from "quasar";
 
 const linksList = [
   {
+    title: "Home",
+    caption: "Informações gerais",
+    icon: "mdi-home",
+    routeName: "admin",
+  },
+  {
     title: "Membros",
     caption: "Batizados e não baptizados",
     icon: "mdi-account-tie",

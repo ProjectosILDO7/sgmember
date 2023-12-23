@@ -29,6 +29,12 @@ const routes = [
         name: "form-cadastro",
         component: () => import("src/components/forms/FormAddEditMembro.vue"),
       },
+      {
+        path: "/formAddEditOfertorio/:id?",
+        name: "form-cadastro-ofertorio",
+        component: () =>
+          import("src/components/forms/FormAddEditOfertorio.vue"),
+      },
     ],
     meta: { requiresAuth: true },
   },

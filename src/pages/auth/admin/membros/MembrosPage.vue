@@ -21,11 +21,11 @@
           :to="{ name: 'form-cadastro' }"
         />
         <q-btn
+          v-if="membros.length !== 0"
           glasses
           outline
           dense
           icon="mdi-file-excel"
-          v-if="membros.length !== 0"
           class="q-ml-sm"
           color="green-10"
           :disable="loading"

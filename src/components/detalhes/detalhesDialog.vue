@@ -3,7 +3,12 @@
     <q-card>
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">
-          <q-avatar icon="mdi-account-tie" />
+          <q-btn
+            flat
+            label="Mais detalhes do membro"
+            icon="mdi-account-tie"
+            color="blue-10"
+          />
         </div>
         <q-space />
         <q-btn
