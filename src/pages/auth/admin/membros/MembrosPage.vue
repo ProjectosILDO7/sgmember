@@ -1,6 +1,7 @@
 <template>
   <div class="q-pa-md">
     <q-table
+      dense
       flat
       bordered
       title="Treats"

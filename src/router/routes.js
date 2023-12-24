@@ -30,6 +30,14 @@ const routes = [
         component: () => import("src/components/forms/FormAddEditMembro.vue"),
       },
       {
+        path: "/testificacao/:id?",
+        name: "testificacao-page",
+        component: () =>
+          import(
+            "src/pages/auth/admin/secretaria/testificacao/testificacaoMembro.vue"
+          ),
+      },
+      {
         path: "/formAddEditOfertorio/:id?",
         name: "form-cadastro-ofertorio",
         component: () =>

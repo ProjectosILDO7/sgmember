@@ -68,10 +68,6 @@
               outlined
               label="Valor da oferta"
               v-model="form.oferta"
-              :rules="[
-                (val) =>
-                  (val !== null && val !== '') || 'Porfavor informe o valor',
-              ]"
               suffix="Kz"
             >
               <template v-slot:prepend>
@@ -94,6 +90,19 @@
             >
               <template v-slot:prepend>
                 <q-icon name="mdi-credit-card-outline" />
+              </template>
+            </q-input>
+          </div>
+          <div class="col-8">
+            <q-input
+              dense
+              type="text"
+              outlined
+              label="Outras contribuições"
+              v-model="form.outras_contribuicoes"
+            >
+              <template v-slot:prepend>
+                <q-icon name="mdi-chess-bishop" />
               </template>
             </q-input>
           </div>
@@ -147,6 +156,7 @@ export default {
       dizimo: 0,
       oferta: 0,
       data: "",
+      outras_contribuicoes: "",
     });
 
     const isUpdate = computed(() => {

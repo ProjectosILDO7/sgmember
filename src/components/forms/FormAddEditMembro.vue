@@ -129,6 +129,37 @@
               </template>
             </q-input>
           </div>
+          <div class="col-md-4 col-lg-4 col-xs-12 col-sm-12">
+            <q-input
+              type="date"
+              dense
+              outlined
+              label="Data de ingresso a igreja"
+              v-model="form.data_ingresso"
+              :rules="[
+                (val) =>
+                  (val !== null && val !== '') ||
+                  'Porfavor informe a data de ingresso',
+              ]"
+            >
+              <template v-slot:prepend>
+                <q-icon name="mdi-calendar-range" />
+              </template>
+            </q-input>
+          </div>
+          <div class="col-md-4 col-lg-4 col-xs-12 col-sm-12">
+            <q-input
+              type="date"
+              dense
+              outlined
+              label="Data de baptismo"
+              v-model="form.data_baptismo"
+            >
+              <template v-slot:prepend>
+                <q-icon name="mdi-calendar-range" />
+              </template>
+            </q-input>
+          </div>
 
           <div class="col-md-8 col-lg-8 col-xs-12 col-sm-12">
             <q-select
@@ -149,6 +180,27 @@
             >
               <template v-slot:prepend>
                 <q-icon name="mdi-state-machine" />
+              </template>
+            </q-select>
+          </div>
+          <div class="col-md-8 col-lg-8 col-xs-12 col-sm-12">
+            <q-select
+              dense
+              outlined
+              v-model="form.genero"
+              :options="genero"
+              label="Genero"
+              option-value="id"
+              option-label="status"
+              map-options
+              emit-value
+              :rules="[
+                (val) =>
+                  (val !== null && val !== '') || 'Porfavor selecione o genero',
+              ]"
+            >
+              <template v-slot:prepend>
+                <q-icon name="mdi-gender-male-female" />
               </template>
             </q-select>
           </div>
@@ -196,6 +248,7 @@ export default {
     const route = useRoute();
     const $q = useQuasar();
     const options = ref(["Baptizado", "Não baptizado"]);
+    const genero = ref(["Masculino", "Femenino"]);
     const { getById, post, update } = userApi();
     const form = ref({
       nome: "",
@@ -205,6 +258,9 @@ export default {
       num_bilhete: "",
       data_nascimento: "",
       status: "",
+      data_baptismo: "",
+      data_ingresso: "",
+      genero: "",
     });
 
     const isUpdate = computed(() => {
@@ -243,7 +299,7 @@ export default {
       }
     };
 
-    return { form, options, submit, isUpdate };
+    return { form, options, submit, isUpdate, genero };
   },
 };
 </script>
