@@ -21,18 +21,24 @@
           label="Cadastrar novo membro"
           :to="{ name: 'form-cadastro' }"
         />
+
         <q-btn
-          v-if="membros.length !== 0"
-          glasses
           outline
           dense
           icon="mdi-file-excel"
-          class="q-ml-sm"
           color="green-10"
+          v-if="membros.length !== 0"
           :disable="loading"
-          label="Exportar lista de membros"
-          @click="exportData"
-        />
+          class="q-ml-sm"
+        >
+          <download-excel
+            :data="membros"
+            :fields="fields"
+            worksheet="Membros da congregação"
+            name="Membros.xls"
+            >Exportar para Excel</download-excel
+          >
+        </q-btn>
         <q-space />
         <q-input
           outlined
@@ -57,6 +63,7 @@
             color="secondary"
             @click="editForm(props.row.id)"
           />
+
           <q-btn
             dense
             flat
@@ -84,17 +91,18 @@
 </template>
 
 <script>
+import JsonExcel from "vue-json-excel3";
 import { columns } from "src/pages/auth/admin/membros/table.js";
 import detalhesMembro from "src/components/detalhes/detalhesDialog.vue";
 import { useQuasar, exportFile } from "quasar";
-import { exportToExcel } from "src/pages/auth/admin/membros/exportUtil/exportToExcel.js";
+import { fields } from "src/pages/auth/admin/membros/exportUtil/fieldsExport.js";
 import userApi from "src/composible/userApi.js";
-import usenotification from "src/composible/useNotify";
+//import usenotification from "src/composible/useNotify";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
-  components: { detalhesMembro },
+  components: { detalhesMembro, downloadExcel: JsonExcel },
   setup() {
     const tabela = "membros";
     const membros = ref([]);
@@ -150,16 +158,12 @@ export default {
       }
     };
 
-    const exportData = () => {
-      exportToExcel(membros.value);
-    };
     onMounted(() => {
       carregarMembros();
     });
 
     return {
       columns,
-      exportData,
       membros,
       loading,
       editForm,
@@ -171,7 +175,9 @@ export default {
       dados,
       modalClose,
       excel,
+      fields,
     };
   },
 };
 </script>
+src/pages/auth/admin/membros/exportUtil/fieldsExport.js

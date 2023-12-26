@@ -159,6 +159,7 @@ export default {
         email: "",
         phone: "",
         password: "",
+        status: "activo",
       };
     };
 

@@ -249,7 +249,7 @@ export default {
     const $q = useQuasar();
     const options = ref(["Baptizado", "Não baptizado"]);
     const genero = ref(["Masculino", "Femenino"]);
-    const { getById, post, update } = userApi();
+    const { getById, post, update, validateBi } = userApi();
     const form = ref({
       nome: "",
       nome_pai: "",
@@ -287,10 +287,15 @@ export default {
           notifySuccess("Dados do membro actualizado com sucesso...");
           router.push({ name: "membros" });
         } else {
-          $q.loading.show({ message: "Cadastrando..." });
-          await post(tabela, form.value);
-          notifySuccess("Membro inserido com sucesso");
-          router.push({ name: "membros" });
+          const val = await validateBi(tabela, form.value.num_bilhete);
+          if (val) {
+            notifyError("Já existe um dado referente a este membro...!");
+          } else {
+            $q.loading.show({ message: "Cadastrando..." });
+            await post(tabela, form.value);
+            notifySuccess("Membro inserido com sucesso");
+            router.push({ name: "membros" });
+          }
         }
       } catch (error) {
         notifyError(error.message);

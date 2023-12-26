@@ -62,8 +62,14 @@ export default function userAuthUser() {
     return user;
   };
 
-  const updateUser = async (data) => {
-    const { user, error } = await supabase.auth.update(data);
+  const updateUsuario = async ({ email, password }, data) => {
+    const { user, error } = await supabase.auth.updateUser(
+      {
+        email,
+        password,
+      },
+      data
+    );
     if (error) throw error;
     return user;
   };
@@ -90,7 +96,7 @@ export default function userAuthUser() {
     register,
     sendEmailResetPassword,
     loginWithSocialProvider,
-    updateUser,
+    updateUsuario,
     token,
     getToken,
   };

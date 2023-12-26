@@ -16,7 +16,7 @@
         <div>
           <q-btn-dropdown flat color="white" :label="user.user_metadata.name">
             <q-list>
-              <q-item clickable v-close-popup @click="onItemClick">
+              <q-item clickable v-close-popup @click="onClickPerfil">
                 <q-item-section>
                   <q-item-label
                     ><q-icon name="mdi-account" /> Perfil</q-item-label
@@ -24,10 +24,11 @@
                 </q-item-section>
               </q-item>
 
-              <q-item clickable v-close-popup @click="onItemClick">
+              <q-item clickable v-close-popup @click="onClickSettingUser">
                 <q-item-section>
                   <q-item-label
-                    ><q-icon name="mdi-cog" /> Configurações</q-item-label
+                    ><q-icon name="mdi-cog" /> Configurações de
+                    Usuários</q-item-label
                   >
                 </q-item-section>
               </q-item>
@@ -110,6 +111,10 @@ export default defineComponent({
     const router = useRouter();
     const $q = useQuasar();
 
+    const onClickPerfil = () => {
+      router.push({ name: "form-pefil-page" });
+    };
+
     const logoutPage = async () => {
       try {
         $q.dialog({
@@ -129,10 +134,16 @@ export default defineComponent({
       }
     };
 
+    const onClickSettingUser = async () => {
+      router.push({ name: "setting-users" });
+    };
+
     return {
       logout,
+      onClickSettingUser,
       logoutPage,
       user,
+      onClickPerfil,
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer() {

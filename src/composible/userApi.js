@@ -17,6 +17,15 @@ export default function userApi() {
     if (error) throw error;
     return data[0];
   };
+
+  const validateBi = async (table, num_bilhete) => {
+    const { data, error } = await supabase
+      .from(table)
+      .select()
+      .eq("num_bilhete", num_bilhete);
+    if (error) throw error;
+    return data[0];
+  };
   const post = async (table, form) => {
     const { data, error } = await supabase
       .from(table)
@@ -72,5 +81,6 @@ export default function userApi() {
     update,
     remove,
     fileName,
+    validateBi,
   };
 }

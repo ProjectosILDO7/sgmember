@@ -49,10 +49,6 @@
               outlined
               label="Valor do dizimo"
               v-model="form.dizimo"
-              :rules="[
-                (val) =>
-                  (val !== null && val !== '') || 'Porfavor informe o valor',
-              ]"
               suffix="Kz"
             >
               <template v-slot:prepend>

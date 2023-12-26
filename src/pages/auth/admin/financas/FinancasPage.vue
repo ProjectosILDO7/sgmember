@@ -35,6 +35,24 @@
           </template>
         </q-input>
 
+        <q-btn
+          outline
+          dense
+          icon="mdi-file-excel"
+          color="green-10"
+          v-if="ofertorios.length !== 0"
+          :disable="loading"
+          class="q-mt-md"
+        >
+          <download-excel
+            :data="ofertorios"
+            :fields="fields"
+            worksheet="Nossos ofertorio"
+            name="ofertorios.xls"
+            >Exportar para Excel</download-excel
+          >
+        </q-btn>
+
         <q-table
           dense=""
           title="Ofertórios"
@@ -69,15 +87,17 @@
 </template>
 
 <script>
+import JsonExcel from "vue-json-excel3";
 import { columns } from "./table.js";
 import { ref, onMounted, useAttrs } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import userApi from "src/composible/userApi";
 import usenotification from "src/composible/useNotify";
+import { fields } from "src/pages/auth/admin/financas/exportUtil/fieldsExport.js";
 export default {
   name: "table-ofertorio",
-
+  components: { downloadExcel: JsonExcel },
   setup(props) {
     const tabela = "ofertorio";
     const filter = ref("");
@@ -131,6 +151,7 @@ export default {
       filter,
       editOfertorio,
       apagarOfertorio,
+      fields,
     };
   },
 };

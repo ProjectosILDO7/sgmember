@@ -30,6 +30,17 @@ const routes = [
         component: () => import("src/components/forms/FormAddEditMembro.vue"),
       },
       {
+        path: "/perfil-page",
+        name: "form-pefil-page",
+        component: () => import("src/components/perfil/perfil-form.vue"),
+      },
+      {
+        path: "/setting-users",
+        name: "setting-users",
+        component: () =>
+          import("src/pages/auth/admin/setingUser/SettingUsers.vue"),
+      },
+      {
         path: "/testificacao/:id?",
         name: "testificacao-page",
         component: () =>
