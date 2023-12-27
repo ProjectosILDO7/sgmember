@@ -12,6 +12,18 @@ export default function userApi() {
     if (error) throw error;
     return data;
   };
+
+  const fetchCount = async (table, userId) => {
+    const { data, error, count } = await supabase
+      .from(table)
+      .select("*", { count: "exact" })
+      .eq("user_id", userId);
+    if (error) throw error;
+    return {
+      data,
+      count,
+    };
+  };
   const getById = async (table, id) => {
     const { data, error } = await supabase.from(table).select().eq("id", id);
     if (error) throw error;
@@ -82,5 +94,6 @@ export default function userApi() {
     remove,
     fileName,
     validateBi,
+    fetchCount,
   };
 }

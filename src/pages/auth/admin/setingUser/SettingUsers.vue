@@ -35,7 +35,7 @@
                   dense
                   icon="mdi-cog"
                   class="text-blue-grey-10"
-                  @click="showModalForm(props.row)"
+                  @click="showModalForm(props.row.id)"
                 ></q-btn>
               </q-td>
             </template>
@@ -44,17 +44,18 @@
 
         <div class="flex flex-center" v-else>
           <q-btn
+            flat
             dense
             label="Escreva o nome do membro na caixa acima para pesquisa e posteriormente atribuição de cargo"
-            class="text-body3 text-green-10 q-mt-lg text-h5"
+            class="text-body1 text-green-10 q-mt-lg text-h6"
           ></q-btn>
         </div>
 
-        <form-user-member
+        <!-- <form-user-member
           :show="show"
           @modalClose="closeModal"
           :dados="dados"
-        />
+        /> -->
       </q-page>
     </q-page-container>
   </q-layout>
@@ -62,7 +63,8 @@
 
 <script>
 import { onMounted, ref } from "vue";
-import formUserMember from "components/forms/formUserMember.vue";
+import { useRouter } from "vue-router";
+//import formUserMember from "components/forms/formUserMember.vue";
 import userApi from "src/composible/userApi";
 const columns = [
   {
@@ -108,8 +110,9 @@ const columns = [
 ];
 export default {
   name: "tarefas-membros",
-  components: { formUserMember },
+  components: {},
   setup() {
+    const router = useRouter();
     const membros = ref([]);
     const { list } = userApi();
     const show = ref(false);
@@ -127,13 +130,9 @@ export default {
       } catch (error) {}
     };
 
-    const closeModal = () => {
-      show.value = false;
-    };
-
-    const showModalForm = (item) => {
-      show.value = true;
-      dados.value = item;
+    const showModalForm = (id) => {
+      console.log(id);
+      router.push({ name: "form-user-member", params: { id: id } });
     };
 
     return {
@@ -143,8 +142,6 @@ export default {
       columns,
       carregarMembros,
       membros,
-      show,
-      closeModal,
     };
   },
 };

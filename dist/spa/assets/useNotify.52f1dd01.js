@@ -1,0 +1,1 @@
+import{u as i}from"./use-quasar.639bb423.js";function r(){const t=i();return{notifySuccess:async o=>{t.notify({position:"top-right",type:"positive",message:o||"Tudo certo",timeout:5e3})},notifyError:async o=>{t.notify({position:"top-right",type:"negative",message:o||"Falha na execu\xE7\xE3o"})}}}export{r as u};

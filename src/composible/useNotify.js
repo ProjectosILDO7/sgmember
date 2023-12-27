@@ -8,6 +8,7 @@ export default function usenotification() {
       position: "top-right",
       type: "positive",
       message: message || "Tudo certo",
+      timeout: 5000,
     });
   };
 
