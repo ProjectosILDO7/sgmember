@@ -97,14 +97,16 @@ import detalhesMembro from "src/components/detalhes/detalhesDialog.vue";
 import { useQuasar, exportFile } from "quasar";
 import { fields } from "src/pages/auth/admin/membros/exportUtil/fieldsExport.js";
 import userApi from "src/composible/userApi.js";
-//import usenotification from "src/composible/useNotify";
+import usenotification from "src/composible/useNotify";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-
+import userAuthUser from "src/composible/userAuthUser";
 export default {
   components: { detalhesMembro, downloadExcel: JsonExcel },
   setup() {
     const tabela = "membros";
+    const { user } = userAuthUser();
+    const { notifyError } = usenotification();
     const membros = ref([]);
     const dados = ref({});
     const excel = exportFile();
@@ -159,6 +161,14 @@ export default {
     };
 
     onMounted(() => {
+      if (user.value.user_metadata.funcao == "Secretário") {
+        notifyError("Acesso limitado...");
+        router.push({ name: "secretaria" });
+      }
+      if (user.value.user_metadata.funcao == "Tesoureiro") {
+        notifyError("Acesso limitado...");
+        router.push({ name: "financas" });
+      }
       carregarMembros();
     });
 

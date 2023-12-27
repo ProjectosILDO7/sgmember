@@ -95,10 +95,12 @@ import { useQuasar } from "quasar";
 import userApi from "src/composible/userApi";
 import usenotification from "src/composible/useNotify";
 import { fields } from "src/pages/auth/admin/financas/exportUtil/fieldsExport.js";
+import userAuthUser from "src/composible/userAuthUser.js";
 export default {
   name: "table-ofertorio",
   components: { downloadExcel: JsonExcel },
   setup(props) {
+    const { user } = userAuthUser();
     const tabela = "ofertorio";
     const filter = ref("");
     const ofertorios = ref([]);
@@ -108,6 +110,14 @@ export default {
     const { notifyError, notifySuccess } = usenotification();
 
     onMounted(() => {
+      if (user.value.user_metadata.funcao == "Secretário") {
+        notifyError("Acesso limitado...");
+        router.push({ name: "secretaria" });
+      }
+      if (user.value.user_metadata.funcao == "Tesoureiro") {
+        notifyError("Acesso limitado...");
+        router.push({ name: "financas" });
+      }
       carregarOfertorio();
     });
 

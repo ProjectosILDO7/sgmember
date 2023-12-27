@@ -54,6 +54,11 @@ const routes = [
         component: () =>
           import("src/components/forms/FormAddEditOfertorio.vue"),
       },
+      {
+        path: "/email-confirmationAdmin",
+        name: "email-confirmationAdmin",
+        component: () => import("pages/auth/emailConfirmation.vue"),
+      },
     ],
     meta: { requiresAuth: true },
   },

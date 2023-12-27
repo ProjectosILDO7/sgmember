@@ -21,7 +21,7 @@
             @click="closeModal"
           />
         </q-card-section>
-        {{ dados }}
+
         <q-card-section class="q-gutter-md">
           <q-input
             dense
@@ -29,6 +29,7 @@
             type="text"
             v-model="form.name"
             label="Nome do membro"
+            disable
           >
             <template v-slot:prepend>
               <q-icon name="mdi-account-tie" />
@@ -37,9 +38,13 @@
           <q-input
             dense
             outlined
-            type="text"
+            type="email"
             v-model="form.email"
-            label="Nome do membro"
+            label="E-mail do membro"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') || 'Porfavor informe o e-mail',
+            ]"
           >
             <template v-slot:prepend>
               <q-icon name="mdi-at" />
@@ -51,6 +56,14 @@
             type="text"
             v-model="form.phone"
             label="Telemóvel"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') ||
+                'Porfavor informe o nº de telemóvel',
+              (val) =>
+                (val > 0 && val.length == 9) ||
+                'O número de telemóvel deve ter no mínimo 9 caracteres',
+            ]"
           >
             <template v-slot:prepend>
               <q-icon name="mdi-phone-classic" />
@@ -62,6 +75,14 @@
             type="password"
             v-model="form.password"
             label="Atribuir uma senha"
+            hint="Apenas números"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') || 'Porfavor digite sua senha',
+              (val) =>
+                (val > 0 && val.length >= 6) ||
+                'A sua senha deve ter maior ou igual a 6 caracteres',
+            ]"
           >
             <template v-slot:prepend>
               <q-icon name="mdi-lock" />
@@ -74,6 +95,10 @@
             v-model="form.funcao"
             :options="options"
             label="Selecione uma função"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') || 'Porfavor selecione uma função',
+            ]"
           >
             <template v-slot:prepend>
               <q-icon name="mdi-cog" />
@@ -83,6 +108,7 @@
 
         <q-card-section>
           <q-btn
+            type="submit"
             class="full-width q-mt-md"
             icon="mdi-content-save-cog"
             color="green-10"
@@ -95,7 +121,7 @@
   </q-dialog>
 </template>
 <script>
-import { ref } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useQuasar } from "quasar";
 import userAuthUser from "src/composible/userAuthUser";
 import usenotification from "src/composible/useNotify";
@@ -111,8 +137,9 @@ export default {
   },
   setup(props, { emit }) {
     const $q = useQuasar();
+    const valorNome = ref(props.dados.nome);
     const { notifyError, notifySuccess } = usenotification();
-    const { register } = userAuthUser();
+    const { registerMemberForAdmin } = userAuthUser();
     const options = ref(["Secretário", "Tesoureiro"]);
     const form = ref({
       name: "",
@@ -125,10 +152,19 @@ export default {
       emit("modalClose");
     };
 
+    watch(() => {
+      valorNome.value = props.dados.nome;
+      form.value.name = valorNome.value;
+    });
+
     const SalvarService = async () => {
       try {
         $q.loading.show({ message: "Salvando novo usuário..." });
-        await register(form.value);
+        await registerMemberForAdmin(form.value);
+        router.push({
+          name: "email-confirmationAdmin",
+          query: { email: form.value.email },
+        });
         notifySuccess(
           "Novo usuário adicionado com sucesso, ( O utente precisa verificar o e-mail enviado na sua caixa de entrada)"
         );
@@ -139,7 +175,7 @@ export default {
       }
     };
 
-    return { closeModal, options, form, SalvarService };
+    return { closeModal, options, form, SalvarService, valorNome };
   },
 };
 </script>

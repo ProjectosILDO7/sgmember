@@ -124,7 +124,6 @@ export default {
     const carregarMembros = async () => {
       try {
         membros.value = await list(tabela);
-        console.log(membros.value);
       } catch (error) {}
     };
 
@@ -134,11 +133,12 @@ export default {
 
     const showModalForm = (item) => {
       show.value = true;
-      dados.value = item.value;
+      dados.value = item;
     };
 
     return {
       search,
+      dados,
       showModalForm,
       columns,
       carregarMembros,

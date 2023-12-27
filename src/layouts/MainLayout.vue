@@ -24,7 +24,15 @@
                 </q-item-section>
               </q-item>
 
-              <q-item clickable v-close-popup @click="onClickSettingUser">
+              <q-item
+                clickable
+                v-close-popup
+                @click="onClickSettingUser"
+                v-if="
+                  user.user_metadata.funcao !== 'Secretário' &&
+                  user.user_metadata.funcao !== 'Financas'
+                "
+              >
                 <q-item-section>
                   <q-item-label
                     ><q-icon name="mdi-cog" /> Configurações de

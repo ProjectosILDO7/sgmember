@@ -44,6 +44,7 @@ export default function userAuthUser() {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
   };
+
   const register = async ({ email, password, ...meta }) => {
     const { user, error } = await supabase.auth.signUp({
       email,
@@ -52,6 +53,25 @@ export default function userAuthUser() {
         data: {
           name: meta.name,
           phone: meta.phone,
+          photoURL: meta.photoURL,
+          redirectTo: `${window.location.origin}/me?fromEmail=registrationConfirmation`,
+        },
+      },
+    });
+
+    if (error) throw error;
+    return user;
+  };
+
+  const registerMemberForAdmin = async ({ email, password, ...meta }) => {
+    const { user, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name: meta.name,
+          phone: meta.phone,
+          funcao: meta.funcao,
           photoURL: meta.photoURL,
           redirectTo: `${window.location.origin}/me?fromEmail=registrationConfirmation`,
         },
@@ -99,5 +119,6 @@ export default function userAuthUser() {
     updateUsuario,
     token,
     getToken,
+    registerMemberForAdmin,
   };
 }
