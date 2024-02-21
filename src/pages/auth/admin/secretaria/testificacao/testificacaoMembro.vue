@@ -1,342 +1,291 @@
 <template>
-  <q-layout>
-    <q-page-container>
-      <q-page padding>
-        <div class="text-h6 text-body1 text-green-10">
-          Testificação do membro
+  <q-page padding>
+    <q-btn
+      class="col-12"
+      label="Mostrar o Doc"
+      icon="mdi-cloud-print"
+      color="green-10"
+      @click="gerarPDF"
+      v-if="pdfApresenta == true"
+      id="mostrarDoc"
+    />
+    <div class="row" v-if="pdfApresenta == false">
+      <q-btn
+        class="col-12"
+        flat
+        dense
+        label="Preencha os campos em falta da Testificação"
+      />
+      <q-btn
+        class="col-12"
+        outline
+        dense
+        label="gerar Documento PDF para Imprensão"
+        icon="mdi-file-excel"
+        color="green-10"
+        @click="gerarPDF"
+      />
+      <q-input
+        dense
+        outlined
+        class="col-4 q-gutter-sm q-pa-sm"
+        label="Igreja de destino"
+        v-model="igreja_destino"
+      ></q-input>
+      <q-input
+        dense
+        outlined
+        class="col-4 q-gutter-sm q-pa-sm"
+        label="Nome da Igreja local"
+        v-model="igreja_local"
+      ></q-input>
+      <q-input
+        dense
+        outlined
+        class="col-4 q-gutter-sm q-pa-sm"
+        label="Descrição da Testificação"
+        v-model="desrcricao_testificao"
+      ></q-input>
+      <q-input
+        dense
+        outlined
+        class="col-4 q-gutter-sm q-pa-sm"
+        label="Função do membro"
+        v-model="funcao_membro"
+      ></q-input>
+      <q-input
+        dense
+        outlined
+        class="col-4 q-gutter-sm q-pa-sm"
+        label="Categoria"
+        v-model="categoria"
+      ></q-input>
+      <q-input
+        dense
+        outlined
+        class="col-4 q-gutter-sm q-pa-sm"
+        label="Lema do Milénio de Cristo"
+        v-model="lema_ministerio"
+      ></q-input>
+      <q-input
+        dense
+        outlined
+        class="col-6 q-gutter-sm q-pa-sm"
+        label="O Secretario"
+        v-model="secretario"
+      ></q-input>
+      <q-input
+        dense
+        outlined
+        class="col-6 q-gutter-sm q-pa-sm"
+        label="O Representante Paroquial"
+        v-model="representante_paroquial"
+      ></q-input>
+    </div>
+
+    <iframe
+      :src="pdfSrc"
+      width="100%"
+      height="500px"
+      v-if="pdfApresenta"
+    ></iframe>
+
+    <div id="elemento-para-pdf" class="style-font" v-if="pdfApresenta">
+      <div class="row">
+        <div class="col-12 text-center">
+          <b>IGREJA DE NOSSO SENHOR JESUS CRISTO NO MUNDO</b>
         </div>
-        <q-separator id="1" />
-        <div class="row flex flex-right">
-          <div class="col-12 text-right">
-            <q-btn
-              outline
-              dense
-              @click="alert = true"
-              color="green-5"
-              icon="mdi-file-edit"
-              class="q-mb-md q-mt-md"
-            />
-          </div>
+        <div class="col-12 text-center">
+          <b>{{ NOME_IGREJA }}</b>
+        </div>
+        <div class="col-12 text-center">Relembrar em 25 de Julho de 1949</div>
+        <div class="col-12 text-center">
+          Por Sua Santidade Profeta Simão Gonçalves Tôco
+        </div>
+        <div class="col-12 text-center">
+          <b>PROVÍNCIA ECLESIASTICA REVERENDO PASTOR ENOQUE ELIAS</b>
+        </div>
+        <div class="col-12 text-center">
+          <b>PARÓQUIA PASTOR DOMINGOS MAVACALA</b>
+        </div>
+        <br />
+        <div class="col-12 text-center">
+          <b>Testificação Nº______/PPDM/{{ data }}</b>
+        </div>
+      </div>
+      <br />
+
+      <div class="row">
+        <div class="col-12 style-font-body text-justify">
+          Para os devidos efeitos achados convenientes e de acordo com o pedido
+          dos anciãos e conselheiros da Direcção Paroquial, segue viagem para a
+          INSJCM em {{ igreja_destino }} em {{ desrcricao_testificao }}
+          <span v-if="membro.genero == 'Masculino'">o </span>
+          <span v-else>a </span>
+          <span v-if="membro.genero == 'Masculino'">irmão</span>
+          <span v-else>irmã</span> <b>{{ membro.nome }}</b
+          >, ostentando a categoria de {{ categoria }}, exercendo a função de
+          {{ funcao_membro }}. Fas-se acompanhar dos irmão:<br />
+
+          {{ linha_de_observacao }}
+          {{ linha_de_observacao }}
+          {{ linha_de_observacao }}
+          {{ linha_de_observacao }}
+          <br />
+          <br />
+          Podem ser recebidos em qualquer congregação do Senhor onde existe os
+          Tocoístas da Igreja de Nosso Senhor Jesus Cristo no Mundo;
+          <br />
+          <br />
+          Os Anciãos e Conselheiros da Igreja vos saúdam em Nome do Pai, do
+          Filho e do Espirito santo, Amém.
+          <br />
+          <br />
+          {{ igreja_local }}, no Lubango, aos _____ de ___________________ de
+          {{ data }}.
+          <p>{{ lema_ministerio }} - Milénio de Cristo</p>
+        </div>
+        <br />
+        <div class="col-12 text-center">
+          <br />
+          <br />
+          <b>A BEM DA IGRIJA</b>
+        </div>
+        <div class="col-12 text-center">
+          <b>OS ANCIÃOS E CONSELHEIROS</b>
         </div>
 
-        <q-separator />
-
-        <div id="elementToPrint" class="border-blue-10 row q-mt-lg">
-          <q-card>
-            <div class="col-12 flex-center">
-              <pre class="text-body1">
-            <img src="../../../../../../public/igreja-pentecostal.png" style="max-width: 80px;"/>
-            <b>{{ nome_igreja }}</b>
-            <b>{{ endereco_igreja }}</b>
-
-            NIF:<span class="text-red-10" v-if="nif">{{ nif }}</span>
-            Telefone da Igreja: <span class="text-red-10">{{ telemovel }}</span>
-            E-mail: <span class="text-red-10">{{ email }}</span>
-            Site da Igreja: <span class="text-red-10">{{ site }}</span>
-
-                                                                        À {{ nova_igreja }}
-                                                                        {{ endereco_nova_igreja }},
-
-
-                                                                      </pre>
-              <p class="text-justify">
-                Prezados irmãos em Cristo, É com grande alegria e gratidão a
-                Deus que, escrevemos esta {{ testificacao }} em nome
-                <span v-if="membro.genero == 'Femenino'">da irmã</span
-                ><span v-else>do irmão</span> <b>{{ membro.nome }}</b
-                >, membro fiel da {{ nome_igreja }}, que está em processo de
-                deslocamento para a região de {{ cidade_igreja }}.
-                <span v-if="membro.genero == 'Femenino'">A irmã</span
-                ><span v-else>O irmão</span> {{ membro.nome }} tornou-se parte
-                de nossa comunidade em {{ membro.data_ingresso }}, sendo
-                batizado em {{ membro.data_baptismo }}.
-              </p>
-
-              <p>
-                Durante seu tempo conosco,
-                <span v-if="membro.genero == 'Femenino'">ela</span
-                ><span v-else>ele</span> demonstrou um compromisso notável com
-                sua fé e uma participação ativa em diversas áreas de nosso
-                ministério.
-                <span v-if="membro.genero == 'Femenino'">A irmã</span
-                ><span v-else>O irmão</span> {{ membro.nome }} serviu com
-                dedicação no ministério de {{ ministerio }}, além de participar
-                regularmente dos cultos de adoração, estudos bíblicos e eventos
-                especiais promovidos por nossa igreja.
-              </p>
-
-              <p>
-                Sua presença foi uma bênção para nossa comunidade, e suas
-                habilidades e dons foram usados para edificação do corpo de
-                Cristo. Durante sua membresia, observamos o testemunho cristão
-                exemplar <span v-if="membro.genero == 'Femenino'">da irmã</span
-                ><span v-else>do irmão</span> {{ membro.nome }}. Acreditamos que
-                <span v-if="membro.genero == 'Femenino'">ela</span
-                ><span v-else>ele</span> será uma valiosa adição à vossa
-                congregação.
-                <span v-if="membro.genero == 'Femenino'">A irmã</span
-                ><span v-else>O irmão</span> {{ membro.nome }} está se
-                deslocando devido a {{ moctivo_da_deslocacao }}.
-              </p>
-
-              <p>
-                Recomendamos calorosamente
-                <span v-if="membro.genero == 'Femenino'">a irmã</span
-                ><span v-else>o irmão</span> à {{ nova_igreja }} e oramos para
-                que <span v-if="membro.genero == 'Femenino'">ela</span
-                ><span v-else>ele</span> continue a crescer em sua jornada
-                espiritual e a servir ao Senhor com zelo e amor.
-              </p>
-              <br />
-              <br />
-              <br />
-              <br />
-
-              <pre>
-            Em Cristo,
-            <br/>
-            <b>O Pastor</b>
-
-            _______________________________
-
-            <p>
-              O Secretário
-            _________________________________
-            </p>
-           </pre>
-            </div>
-          </q-card>
+        <div class="col-12 text-center">
+          __________________________________________________________________
         </div>
-
-        <q-dialog v-model="alert" persistent>
-          <q-card class="q-gutter-sm">
-            <q-card-section>
-              <div class="text-h6">Outras Informações</div>
-            </q-card-section>
-
-            <q-card-section>
-              <q-icon name="mdi-help-box" />Inseri no documento os campos em
-              falta, informações que qualificam o membro, para uma boa receição
-              em outra congregação...
-            </q-card-section>
-            <q-card-section>
-              <span class="text-body6 text-blue-grey-6"
-                >Informação da Igreja</span
-              >
-            </q-card-section>
-            <q-card-section class="q-pt-none q-gutter-sm">
-              <q-input
-                dense
-                class="col-12"
-                outlined
-                type="text"
-                label="Nome da igreja"
-                v-model="nome_igreja"
-              />
-              <q-input
-                dense
-                class="col-12"
-                outlined
-                type="text"
-                label="Localidade da  Igreja"
-                v-model="cidade_igreja"
-              />
-              <q-input
-                dense
-                class="col-12"
-                outlined
-                type="text"
-                label="E-mail da Igreja"
-                v-model="email"
-              />
-              <q-input
-                dense
-                class="col-12"
-                outlined
-                type="text"
-                label="Site da Igreja"
-                v-model="site"
-              />
-              <q-input
-                dense
-                class="col-12"
-                outlined
-                type="text"
-                label="Telemovel da Igreja"
-                v-model="telemovel"
-              />
-            </q-card-section>
-            <q-card-section>
-              <span class="text-body6 text-blue-grey-6"
-                >Informações da Igreja de destino</span
-              >
-            </q-card-section>
-            <q-card-section class="q-gutter-sm">
-              <q-input
-                dense
-                class="col-12"
-                outlined
-                type="text"
-                label="Igreja de destino"
-                v-model="nova_igreja"
-              />
-              <q-input
-                dense
-                class="col-12"
-                outlined
-                type="text"
-                label="Endereço da Igreja de destino"
-                v-model="endereco_nova_igreja"
-              />
-            </q-card-section>
-
-            <q-card-section>
-              <span class="text-body6 text-blue-grey-6"
-                >Informações do Membro</span
-              >
-            </q-card-section>
-            <q-card-section class="q-gutter-sm">
-              <q-input
-                dense
-                class="col-12"
-                outlined
-                type="text"
-                label="Testificação ou carta de recomendação"
-                v-model="testificacao"
-              />
-              <q-input
-                dense
-                class="col-12"
-                outlined
-                type="text"
-                label="Ministério onde serviu"
-                v-model="ministerio"
-              />
-              <q-input
-                dense
-                class="col-12"
-                outlined
-                type="text"
-                label="Está se deslocando devido a..."
-                v-model="moctivo_da_deslocacao"
-              />
-            </q-card-section>
-            <q-card-actions align="right" class="q-gutter-x-md">
-              <q-btn flat icon="mdi-close" color="negative" v-close-popup />
-              <q-btn
-                flat
-                icon="mdi-printer"
-                color="primary"
-                v-close-popup
-                @click="gerarRelatorio"
-              />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
-      </q-page>
-    </q-page-container>
-  </q-layout>
+        <div class="col-12 text-center">
+          __________________________________________________________________
+        </div>
+        <div class="col-12 text-center">
+          __________________________________________________________________
+        </div>
+      </div>
+      <br />
+      <br />
+      <div class="row">
+        <div class="col-6 text-center">
+          <b>O Secretário Executivo</b>
+          <p>________________________________</p>
+          {{ secretario }}
+        </div>
+        <div class="col-6 text-center">
+          <b>O Representante Paroquial</b>
+          <p>______________________________</p>
+          {{ representante_paroquial }}
+        </div>
+      </div>
+    </div>
+  </q-page>
 </template>
-<script>
-import mammoth from "mammoth";
-import { defineComponent, ref, onMounted, computed } from "vue";
-import userApi from "src/composible/userApi";
-import usenotification from "src/composible/useNotify";
+
+<script setup>
+import html2pdf from "html2pdf.js";
+import { ref, onMounted, computed } from "vue";
 import { useQuasar } from "quasar";
 import { useRoute } from "vue-router";
+import userApi from "src/composible/userApi";
 
-export default {
-  setup(props) {
-    const { getById } = userApi();
-    const { notifyError, notifySuccess } = usenotification();
-    const tabela = "membros";
-    const $q = useQuasar();
-    const testificacao = ref("testificação");
-    const cidade_igreja = ref("Lubango");
-    const telemovel = ref("921923232");
-    const nova_igreja = ref("");
-    const ministerio = ref("");
-    const moctivo_da_deslocacao = ref("");
-    const endereco_nova_igreja = ref("");
-    const email = ref("ildocuema@gmail.com");
-    const site = ref("www.igrejapentecostal.com");
+const NOME_IGREJA = "<<Os TOCOISTAS>>";
+const linha_de_observacao =
+  "_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________";
+const data = new Date().toJSON().slice(0, 4);
+const pdfSrc = ref("");
+const $q = useQuasar();
+const route = useRoute();
+const membro = ref({});
+const src = "../../../../../../public/igreja-pentecostal.png";
 
-    const route = useRoute();
-    const nif = ref("");
-    const nome_igreja = ref("");
-    const endereco_igreja = ref("");
-    const membro = ref({});
+const pdfApresenta = ref(false);
 
-    const gerarRelatorio = async () => {
-      // Obtém o elemento que você deseja imprimir
-      const elementoParaImprimir = document.getElementById("elementToPrint");
+const igreja_destino = ref("");
+const igreja_local = ref("");
+const desrcricao_testificao = ref("");
+const funcao_membro = ref("");
+const categoria = ref("");
+const lema_ministerio = ref("");
+const secretario = ref("");
+const representante_paroquial = ref("");
 
-      // Cria uma cópia do elemento para imprimir
-      const copiaElemento = elementoParaImprimir.cloneNode(true);
+const { getById } = userApi();
 
-      // Cria um documento temporário
-      const documentoTemporario = document.createElement("div");
-      documentoTemporario.appendChild(copiaElemento);
+onMounted(() => {
+  carregarMembro();
+});
 
-      // Abre uma nova janela e imprime o conteúdo
-      const janelaImprimir = window.open("", "_blank");
-      janelaImprimir.document.write(documentoTemporario.innerHTML);
-      janelaImprimir.document.close();
-      janelaImprimir.print();
-    };
+const idMembro = computed(() => {
+  return route.params.id;
+});
 
-    onMounted(() => {
-      dataMembro();
-    });
+const carregarMembro = async () => {
+  try {
+    $q.loading.show();
+    membro.value = await getById("membros", idMembro.value);
+    console.log(membro.value);
+    //gerarPDF();
+  } catch (error) {
+    console.log(error.message);
+  } finally {
+    $q.loading.hide();
+  }
+};
 
-    const isMemberId = computed(() => {
-      return route.params.id;
-    });
-
-    const dataMembro = async () => {
-      try {
-        $q.loading.show({ message: "Carregando informações do membro" });
-        membro.value = await getById(tabela, isMemberId.value);
-      } catch (error) {
-        notifyError(error.message);
-      } finally {
-        $q.loading.hide();
+const gerarPDF = () => {
+  pdfApresenta.value = true;
+  $q.loading.show();
+  const element = document.getElementById("elemento-para-pdf");
+  html2pdf()
+    .from(element)
+    .set({
+      margin: 0.89,
+      filename: "Testificação.pdf",
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    })
+    .toPdf()
+    .get("pdf")
+    .then((pdf) => {
+      const totalPages = pdf.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+        const pageWidth = pdf.internal.pageSize.width;
+        const imageWidth = 0.52; // Largura da imagem
+        const imageX = (pageWidth - imageWidth) / 2;
+        pdf.addImage(
+          "../../../../../../public/igreja-pentecostal.png",
+          "PNG",
+          imageX,
+          0.25,
+          imageWidth,
+          0.52
+        );
+        pdf.setFontSize(10);
+        pdf.setTextColor(150);
+        pdf.text(
+          "Igreja : OS TOCOISTAS",
+          1,
+          pdf.internal.pageSize.height - 0.5
+        );
       }
-    };
-    return {
-      alert: ref(false),
-      gerarRelatorio,
-      dataMembro,
-      site,
-      telemovel,
-      email,
-      isMemberId,
-      nif,
-      nome_igreja,
-      tabela,
-      membro,
-      endereco_nova_igreja,
-      endereco_igreja,
-      testificacao,
-      cidade_igreja,
-      ministerio,
-      nova_igreja,
-      moctivo_da_deslocacao,
-    };
-  },
+      const blob = new Blob([pdf.output("blob")], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      pdfSrc.value = url;
+    });
+  $q.loading.hide();
 };
 </script>
 
 <style lang="css" scoped>
-p {
-  font-size: 20px;
-  line-height: 2;
-  font-family: Arial, Helvetica, sans-serif;
+.style-font {
+  font-family: "Times New Roman", Times, serif;
+  line-height: 1.3;
 }
-
-pre {
-  font-size: 20px;
-  line-height: 2;
-  font-family: Arial, Helvetica, sans-serif;
+.style-font-body {
+  font-size: 18px;
+  line-height: 1.3;
 }
 </style>

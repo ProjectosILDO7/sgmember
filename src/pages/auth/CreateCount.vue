@@ -173,6 +173,7 @@ export default {
         });
         notifySuccess("conta criada com sucesso");
       } catch (error) {
+        console.log(error.message);
         notifyError(error.message);
       } finally {
         $q.loading.hide();

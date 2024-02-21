@@ -17,6 +17,8 @@
     "@supabase/supabase-js": "^2.39.1",
     "axios": "^1.2.1",
     "exceljs": "^4.4.0",
+    "html2pdf": "^0.0.11",
+    "html2pdf.js": "^0.10.1",
     "mammoth": "^1.6.0",
     "quasar": "^2.6.0",
     "uuid": "^9.0.1",
