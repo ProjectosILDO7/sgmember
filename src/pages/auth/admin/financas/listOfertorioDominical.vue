@@ -6,66 +6,13 @@
           flat
           icon="mdi-chess-bishop"
           color="green-10"
-          label="controlo de depósito de dízimos e ofertório dos  membros"
+          label="controlo de depósito do ofertório dominical"
         />
-
-        <div class="q-gutter-x-sm text-right">
-          <div class="col-12 q-gutter-md">
-            <q-btn
-              dense
-              icon="mdi-cart-arrow-down"
-              color="green-9"
-              label="Depósito"
-              class="q-mb-md col-6"
-              :to="{ name: 'form-cadastro-ofertorio' }"
-            />
-          </div>
-        </div>
         <q-separator />
-
-        <q-input
-          class="col-6"
-          outlined
-          dense
-          v-model="filter"
-          label="Pesquisar"
-        >
-          <template v-slot:prepend>
-            <q-icon name="mdi-magnify" />
-          </template>
-        </q-input>
-
-        <q-btn
-          outline
-          dense
-          icon="mdi-file-excel"
-          color="green-10"
-          v-if="ofertorios.length !== 0"
-          :disable="loading"
-          class="q-mt-md"
-        >
-          <download-excel
-            :data="ofertorios"
-            :fields="fields"
-            worksheet="Nossos ofertorio"
-            name="ofertorios.xls"
-            >Exportar para Excel</download-excel
-          >
-        </q-btn>
-
-        <q-btn
-          outline
-          dense
-          icon="mdi-format-list-bulleted"
-          label="Ver lista do
-        ofertorio dominical"
-          class="q-mt-md q-ml-md"
-          :to="{ name: 'ofertaDominical' }"
-        />
 
         <q-table
           dense=""
-          title="Ofertórios"
+          title="Lista de ofertório geral"
           :rows="ofertorios"
           :columns="columns"
           :filter="filter"
@@ -74,13 +21,6 @@
         >
           <template v-slot:body-cell-options="props">
             <q-td :props="props">
-              <q-btn
-                flat
-                dense
-                color="green-10"
-                icon="mdi-file-edit"
-                @click="editOfertorio(props.row.id)"
-              ></q-btn>
               <q-btn
                 flat
                 dense
@@ -98,7 +38,7 @@
 
 <script>
 import JsonExcel from "vue-json-excel3";
-import { columns } from "./table.js";
+import { columns } from "./tableOfertorioGeral.js";
 import { ref, onMounted, useAttrs } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
@@ -108,10 +48,9 @@ import { fields } from "src/pages/auth/admin/financas/exportUtil/fieldsExport.js
 import userAuthUser from "src/composible/userAuthUser.js";
 export default {
   name: "table-ofertorio",
-  components: { downloadExcel: JsonExcel },
   setup(props) {
     const { user } = userAuthUser();
-    const tabela = "ofertorio";
+    const tabela = "ofertoriogeral";
     const filter = ref("");
     const ofertorios = ref([]);
     const $q = useQuasar();
@@ -139,7 +78,7 @@ export default {
       try {
         $q.dialog({
           title: "Confirmação",
-          message: `tens a certeza que pretendes eliminar o código ( ${item.membro_id} ) de ofertorio da base de dados da Igreja ?`,
+          message: `tens a certeza que pretendes eliminar o valor ( ${item.valor} ) de ofertorio da base de dados da Igreja ?`,
           cancel: true,
           persistent: true,
         }).onOk(async () => {

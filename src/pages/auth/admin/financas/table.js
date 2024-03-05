@@ -2,11 +2,11 @@ import { formatCurrency } from "src/utils/formatCurrency.js";
 
 const columns = [
   {
-    name: "membro_id",
+    name: "nome",
     required: true,
-    label: "Código",
+    label: "Nome do Membro",
     align: "left",
-    field: "membro_id",
+    field: "nome",
     sortable: true,
   },
   {

@@ -13,7 +13,7 @@
             v-else
             flat
             icon="mdi-cash-register"
-            label=" Registrar novo ofertório"
+            label=" Registrar novo ofertório por Membro"
           />
         </span>
         <q-form
@@ -24,10 +24,10 @@
             <q-select
               dense
               outlined
-              v-model="form.membro_id"
+              v-model="form.nome"
               :options="listarMembros"
               label="Selecionar o membro"
-              option-value="id"
+              option-value="nome"
               option-label="nome"
               map-options
               emit-value
@@ -124,6 +124,43 @@
             />
           </div>
         </q-form>
+
+        <div class="row flex justify-center">
+          <q-form class="col-6" @submit.prevent="addGeralOfertorio">
+            <q-btn
+              flat
+              icon="mdi-cash-register"
+              label="Regito do Ofertório geral"
+              class="q-mt-md col-12"
+            />
+            <q-input
+              dense
+              type="numeric"
+              outlined
+              label="Valor da oferta"
+              v-model="form2.valor"
+              suffix="Kz"
+              class="col-12"
+              :rules="[
+                (val) =>
+                  (val !== null && val !== '') ||
+                  'Porfavor informe o valor do ofertorio geral',
+              ]"
+            >
+              <template v-slot:prepend>
+                <q-icon name="mdi-credit-card-outline" />
+              </template>
+            </q-input>
+
+            <q-btn
+              type="submit"
+              icon="mdi-cash-register"
+              label="Regito do Ofertório geral"
+              class="full-width q-mt-md col-12"
+              color="green-10"
+            />
+          </q-form>
+        </div>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -146,13 +183,18 @@ export default {
     const router = useRouter();
     const route = useRoute();
     const $q = useQuasar();
+    const valor = ref("");
     const { getById, post, update, list } = userApi();
     const form = ref({
-      membro_id: "",
+      nome: "",
       dizimo: 0,
       oferta: 0,
       data: "",
       outras_contribuicoes: "",
+    });
+
+    const form2 = ref({
+      valor: 0,
     });
 
     const isUpdate = computed(() => {
@@ -169,7 +211,6 @@ export default {
       } finally {
         $q.loading.hide();
       }
-
       listMembros();
     });
 
@@ -177,10 +218,25 @@ export default {
       try {
         $q.loading.show({ message: "Carregar membros" });
         listarMembros.value = await list("membros");
+        console.log(listarMembros.value);
       } catch (error) {
         notifyError(error.message);
       } finally {
         $q.loading.hide();
+      }
+    };
+
+    const addGeralOfertorio = async () => {
+      try {
+        $q.loading.show();
+        console.log(valor.value);
+        await post("ofertoriogeral", form2.value);
+        notifySuccess("Ofertório registado com sucesso");
+      } catch (error) {
+        console.log(error.message);
+      } finally {
+        $q.loading.hide();
+        form2.value.valor = 0;
       }
     };
 
@@ -204,7 +260,14 @@ export default {
       }
     };
 
-    return { form, submit, isUpdate, listarMembros };
+    return {
+      form,
+      submit,
+      isUpdate,
+      listarMembros,
+      form2,
+      addGeralOfertorio,
+    };
   },
 };
 </script>

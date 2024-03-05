@@ -1,5 +1,5 @@
 const fields = {
-  "Código do depósito": "membro_id",
+  "Nome do membro": "nome",
   "Valor de dízimos": "dizimo",
   "Valor de ofertas": "ofertas",
   "Data do depósito": "data",

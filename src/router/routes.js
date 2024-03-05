@@ -64,6 +64,12 @@ const routes = [
         name: "email-confirmationAdmin",
         component: () => import("pages/auth/emailConfirmation.vue"),
       },
+      {
+        path: "/ofertaDominical",
+        name: "ofertaDominical",
+        component: () =>
+          import("pages/auth/admin/financas/listOfertorioDominical.vue"),
+      },
     ],
     meta: { requiresAuth: true },
   },
